@@ -25,41 +25,33 @@ This project fetches your public GitHub events (like commits, pull requests, iss
 
 ## Setup
 
-1. Clone the repository:
+1. Install via `ingr` 
+   (See [My dotfiles](https://github.com/wxn0brP/dotfiles)):
    ```bash
-   git clone https://github.com/wxn0brp/act.git
-   cd act
+   ingr act
+   ```
+   or
+   ```bash
+   bun add -g github:wxn0brP/act
    ```
 
-2. Install dependencies:
-   ```bash
-   npm install
-   ```
-
-3. Set up your GitHub personal access token (for api access):
+2. Set up your GitHub personal access token (for api access):
      ```bash
      export GITHUB_TOKEN=your_token_here
      ```
 
-4. Make sure your Git username is configured:
+3. Make sure your Git username is configured:
    ```bash
    git config --global user.name "your_github_username"
    ```
 
 ## Usage
 
-- Bun:
-   ```bash
-   bun run bun
-   ```
+```bash
+gh-get-act
+```
 
-2. Node:
-   ```bash
-   npm run build
-   npm start
-   ```
-
-3. After running, you'll find a `results.csv` file in the project directory with your GitHub activity.
+After running, you'll find a `results.csv` file in the project directory with your GitHub activity.
 
 ## Output Format
 

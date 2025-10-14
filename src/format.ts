@@ -6,52 +6,55 @@ export interface GhEvent {
 }
 
 export function formatEvents(events: GhEvent[]): string[][] {
-    return events
-        .map(e => {
-            let detail: string | null = null;
+    const result: string[][] = [];
 
-            switch (e.type) {
-                case "PushEvent":
-                    if (Array.isArray(e.payload?.commits)) {
-                        detail = e.payload.commits.map((c: any) => c.message).join(" | ");
-                    }
-                    break;
+    for (const e of events) {
 
-                case "PullRequestEvent":
-                    if (e.payload?.pull_request) {
-                        const pr = e.payload.pull_request;
-                        detail = `PR #${pr.number}: ${pr.title}`;
-                    }
-                    break;
+        let detail: string | null = null;
 
-                case "IssuesEvent":
-                    if (e.payload?.issue) {
-                        const issue = e.payload.issue;
-                        detail = `Issue #${issue.number}: ${issue.title}`;
-                    }
-                    break;
+        switch (e.type) {
+            case "PushEvent":
+                if (Array.isArray(e.payload?.commits)) {
+                    detail = e.payload.commits.map((c: any) => c.message).join(" | ");
+                }
+                break;
 
-                case "IssueCommentEvent":
-                    if (e.payload?.comment?.body) {
-                        const body = e.payload.comment.body.replace(/[\r\n]+/g, " ").slice(0, 80);
-                        detail = `Comment: ${body}`;
-                    }
-                    break;
+            case "PullRequestEvent":
+                if (e.payload?.pull_request) {
+                    const pr = e.payload.pull_request;
+                    detail = `PR #${pr.number}: ${pr.title}`;
+                }
+                break;
 
-                case "PullRequestReviewCommentEvent":
-                    if (e.payload?.comment?.body) {
-                        const body = e.payload.comment.body.replace(/[\r\n]+/g, " ").slice(0, 80);
-                        detail = `Review comment: ${body}`;
-                    }
-                    break;
+            case "IssuesEvent":
+                if (e.payload?.issue) {
+                    const issue = e.payload.issue;
+                    detail = `Issue #${issue.number}: ${issue.title}`;
+                }
+                break;
 
-                default:
-                    detail = null;
-            }
+            case "IssueCommentEvent":
+                if (e.payload?.comment?.body) {
+                    const body = e.payload.comment.body.replace(/[\r\n]+/g, " ").slice(0, 80);
+                    detail = `Comment: ${body}`;
+                }
+                break;
 
-            if (detail === null) return null;
+            case "PullRequestReviewCommentEvent":
+                if (e.payload?.comment?.body) {
+                    const body = e.payload.comment.body.replace(/[\r\n]+/g, " ").slice(0, 80);
+                    detail = `Review comment: ${body}`;
+                }
+                break;
 
-            return [e.created_at, e.type, e.repo.name, detail];
-        })
-        .filter((row): row is string[] => row !== null);
+            default:
+                detail = null;
+        }
+
+        if (detail === null) continue;
+
+        result.push([e.created_at, e.type, e.repo.name, detail]);
+    }
+
+    return result;
 }

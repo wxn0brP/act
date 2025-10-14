@@ -9,21 +9,21 @@ if (!GITHUB_TOKEN) {
 
 export let fullData = [];
 
-for (let page = 1; page < 10; page++) {
+for (let page = 0; page < 4; page++) {
     console.log(`Downloading page ${page}`);
 
     const res = await fetch(
-        `https://api.github.com/users/${USER}/events/public?page=${page}&per_page=101`,
+        `https://api.github.com/users/${USER}/events/public?page=${page}&per_page=100`,
         {
             headers: {
-                Authorization: `token ${GITHUB_TOKEN}`,
-                Accept: "application/vnd.github.v3+json",
+                Authorization: `token ${GITHUB_TOKEN}`
             },
         }
     );
 
     if (!res.ok) {
         console.error(`Error downloading page ${page}: ${res.status} ${res.statusText}`);
+        console.error(await res.text());
         break;
     }
 
